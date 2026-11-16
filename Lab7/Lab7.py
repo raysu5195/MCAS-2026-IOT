@@ -1,5 +1,5 @@
 import numpy as np 
-from sklearn import sklearn
+# from sklearn import sklearn
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -13,6 +13,24 @@ Your work
 標準化特徵 (StandardScaler)
 '''
 # pre_data = ...
+data[data[:, 2] == "France", 2] = "0"
+data[data[:, 2] == "Germany", 2] = "1"
+data[data[:, 2] == "Spain", 2] = "2"
+
+data[data[:, 3] == "Female", 3] = "0"
+data[data[:, 3] == "Male", 3] = "1"
+
+data = np.delete(data, 0, axis=1)
+
+data = data.astype(float)
+
+x = data[:, :-1]
+y = data[:, -1].astype(int)
+
+scaler = StandardScaler()
+x = scaler.fit_transform(x)
+
+pre_data = np.column_stack((x, y))
 
 np.savetxt("Bank_Customer_Preprocessed.csv", pre_data, delimiter=",")
 
@@ -26,6 +44,13 @@ Your work
 切割 data 為 x_train, x_test, y_train, y_test
 請學習 train_test_split 的使用方法
 '''
+x_train, x_test, y_train, y_test = train_test_split(
+    x,
+    y,
+    test_size=0.1,
+    random_state=40,
+    stratify=y
+)
 
 # 使用訓練集來訓練我們的分類器
 clf.fit(x_train, y_train)
